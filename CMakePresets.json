@@ -1,0 +1,53 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "windows-base",
+            "hidden": true,
+            "generator": "MinGW Makefiles",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_MAKE_PROGRAM": "C:/msys64/ucrt64/bin/mingw32-make.exe"
+            }
+        },
+        {
+            "name": "dev",
+            "displayName": "Development (Debug)",
+            "description": "Debug build with strict warnings",
+            "inherits": "windows-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "DATASTRUCTS_BUILD_TESTS": "ON",
+                "DATASTRUCTS_BUILD_EXAMPLES": "ON",
+                "DATASTRUCTS_BUILD_SANDBOX": "ON"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Optimized release build",
+            "inherits": "windows-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "DATASTRUCTS_BUILD_TESTS": "OFF",
+                "DATASTRUCTS_BUILD_EXAMPLES": "ON",
+                "DATASTRUCTS_BUILD_SANDBOX": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "dev",
+            "configurePreset": "dev"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release"
+        }
+    ]
+}

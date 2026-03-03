@@ -1,0 +1,50 @@
+# --- Build Directories ---
+# Ignore the entire build folder created by CMake Presets (build/dev, build/release)
+build/
+out/
+bin/
+
+# --- CMake Specifics ---
+# If you accidentally ran cmake in the root, ignore these
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+*.cmake
+# But keep the cmake scripts we might write later
+!cmake/*.cmake
+
+# --- Compiled Objects & Binaries ---
+*.o
+*.obj
+*.d
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.pdb
+*.ilk
+
+# --- VS Code ---
+.vscode/*
+# We explicitly keep (!) these files because they make the project portable
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+
+# Ignore c_cpp_properties.json because it often contains local system paths
+# (The CMake Tools extension generates the Intellisense config automatically anyway)
+.vscode/c_cpp_properties.json
+
+# Ignore VS Code internal cache/history
+.vscode/ipch/
+.vscode/.browse.vc.db
+.vscode/*.db
+.history/
+
+# --- OS Specifics ---
+.DS_Store
+Thumbs.db

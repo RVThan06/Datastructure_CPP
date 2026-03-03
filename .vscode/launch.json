@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Sandbox",
+            "type": "cppdbg",
+            "request": "launch",
+            // This magic command asks CMake Tools "What is the current target executable?"
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb", // Use "lldb" for macOS, "gdb" for Linux/MinGW
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            // Windows users with MSVC should use "type": "cppvsdbg" and remove MIMode
+            "windows": {
+                "type": "cppvsdbg",
+                "program": "${command:cmake.launchTargetPath}",
+                "MIMode": null
+            }
+        }
+    ]
+}

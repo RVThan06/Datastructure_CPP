@@ -1,0 +1,81 @@
+{
+    "files.insertFinalNewline": true,
+    "files.associations": {
+        "string_view": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "atomic": "cpp",
+        "*.tcc": "cpp",
+        "cctype": "cpp",
+        "clocale": "cpp",
+        "cmath": "cpp",
+        "cstdarg": "cpp",
+        "cstddef": "cpp",
+        "cstdint": "cpp",
+        "cstdio": "cpp",
+        "cstdlib": "cpp",
+        "cwchar": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "exception": "cpp",
+        "algorithm": "cpp",
+        "memory": "cpp",
+        "memory_resource": "cpp",
+        "optional": "cpp",
+        "string": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "fstream": "cpp",
+        "initializer_list": "cpp",
+        "iosfwd": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "streambuf": "cpp",
+        "typeinfo": "cpp",
+        "ctime": "cpp",
+        "iomanip": "cpp",
+        "functional": "cpp",
+        "iterator": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp"
+    },
+    // --- General CMake Integration ---
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.configureOnOpen": true,
+    // Links IntelliSense to CMake
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    // Forces VS Code to look at your CMakePresets.json file
+    "cmake.useCMakePresets": "always",
+    // --- Clang format ---
+    // [CRITICAL] Enable formatting when you save a file
+    "editor.formatOnSave": true,
+    // Ensure the C++ extension is the one doing the formatting
+    // (It is the one that knows how to read .clang-format)
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    // Optional: Also format headers
+    "[cpp_header]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    // --- Clang Tidy ---
+    "C_Cpp.codeAnalysis.clangTidy.args": [
+        "--target=x86_64-w64-mingw32"
+    ],
+    // [CRITICAL] Turn on Clang-Tidy integration
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    // Run the checks every time you save (Recommended)
+    // You can set this to "onType", but it might make typing feel laggy on large files.
+    "C_Cpp.codeAnalysis.runAutomatically": "onSave"
+}

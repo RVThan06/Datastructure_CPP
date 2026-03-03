@@ -1,0 +1,33 @@
+---
+Language:        Cpp
+# Start with the Google style guide (very readable)
+BasedOnStyle:    Google
+
+# --- Modern C++ Settings ---
+Standard:        c++20
+
+# --- Indentation ---
+# Use 4 spaces for indentation (standard in VS Code)
+IndentWidth:     4
+TabWidth:        4
+UseTab:          Never
+AccessModifierOffset: -4  # Keep 'public:' aligned with 'class'
+
+# --- Spacing & Layout ---
+ColumnLimit:     120      # Allow longer lines (modern screens are wide)
+PointerAlignment: Left    # "int* p" instead of "int *p" (Modern C++ preference)
+SpacesBeforeTrailingComments: 1
+
+# --- Braces & wrapping ---
+# Attach braces to the class/function name
+# class Foo {
+# }
+BreakBeforeBraces: Attach
+
+# Sort includes automatically (#include <vector> before "Vector.hpp")
+SortIncludes:    true
+
+# Fix empty namespace comments
+# namespace foo { ... } // namespace foo
+FixNamespaceComments: true
+...
