@@ -6,7 +6,7 @@
 
 DataStructs is a modern, header-only C++20 data structures library. The primary goal of this project is to provide clean, efficient, and standard-compliant implementations of fundamental data structures.
 
-Built with modern C++ paradigms in mind, the library leverages C++20 features (such as concepts and compile-time evaluations where appropriate) and is strictly validated against rigorous compiler warnings to ensure memory safety and robust performance.
+Built with modern C++ paradigms in mind, the library leverages C++20 features and is strictly validated against rigorous compiler warnings to ensure memory safety and robust performance.
 
 ## Features
 
