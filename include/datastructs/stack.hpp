@@ -3,16 +3,24 @@
 
 #include <algorithm>
 #include <concepts>
+#include <cstddef>
+#include <datastructs/utilities.hpp>
 #include <iostream>
 #include <memory>
 
 namespace datastructs {
-// stack class template
-template <typename T>
+
+/**
+ * @brief A templated stack data structure.
+ * * This class implements stack data structure with Last-in first-out mechanism.
+ * @tparam T is restricted to arithmetic types (integral & floating-point).
+ */
+
+template <datastructs::arithmetic T>
 class Stack {
 public:
-    Stack(int);
-    ~Stack();
+    Stack(std::size_t);
+    ~Stack() {};
     Stack(const Stack&);
     Stack& operator=(const Stack&);
     Stack(Stack&&);
@@ -24,6 +32,7 @@ public:
     T peak() const;
     bool isEmpty() const;
     int size() const;
+    std::size_t capacity() const;
 
     // tp print stack elements
     friend std::ostream& operator<<(std::ostream& out, const Stack& stack) {
@@ -35,27 +44,35 @@ public:
     }
 
 private:
-    int m_capacity{};
+    std::size_t m_capacity{};
     int m_top = -1;
     std::unique_ptr<T[]> m_stack;
 };
 
-template <typename T>
-Stack<T>::Stack(int size) : m_capacity{size}, m_stack{new T[m_capacity]} {}
+/**
+ * @brief Constructs stack object for a given size.
+ * @param size is the size of stack.
+ */
+template <datastructs::arithmetic T>
+Stack<T>::Stack(std::size_t size) : m_capacity{size}, m_stack{std::make_unique<T[]>(m_capacity)} {}
 
-// destructor
-template <typename T>
-Stack<T>::~Stack() {}
-
-// copy constructor --> deep copy
-template <typename T>
+/**
+ * @brief Copy constructor.
+ * Deep copying is done.
+ * @param other_obj stack object to copy from.
+ */
+template <datastructs::arithmetic T>
 Stack<T>::Stack(const Stack& other_obj)
-    : m_capacity{other_obj.m_capacity}, m_top{other_obj.m_top}, m_stack{new T[m_capacity]} {
+    : m_capacity{other_obj.m_capacity}, m_top{other_obj.m_top}, m_stack{std::make_unique<T[]>(m_capacity)} {
     std::copy_n(other_obj.m_stack.get(), m_capacity, m_stack.get());
 }
 
-// copy assignment --> deep copy
-template <typename T>
+/**
+ * @brief Copy assignment.
+ * Deep copying is done.
+ * @param other_obj stack object to copy from.
+ */
+template <datastructs::arithmetic T>
 Stack<T>& Stack<T>::operator=(const Stack<T>& other_obj) {
     // self assignment check
     if (this == &other_obj) {
@@ -69,8 +86,12 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other_obj) {
     return *this;
 }
 
-// move constructor
-template <typename T>
+/**
+ * @brief Move constructor.
+ * * Moves resources from onether stack object, leaves the moved object in valid state.
+ * @param other_obj stack object to move resource from.
+ */
+template <datastructs::arithmetic T>
 Stack<T>::Stack(Stack&& other_obj)
     : m_capacity{other_obj.m_capacity}, m_top{other_obj.m_top}, m_stack{std::move(other_obj.m_stack)} {
     // leave the moved object in valid state
@@ -78,8 +99,12 @@ Stack<T>::Stack(Stack&& other_obj)
     other_obj.m_top = -1;
 }
 
-// move assignment
-template <typename T>
+/**
+ * @brief Move assignment.
+ * * Moves resources from another stack object, leaves the moved object in valid state.
+ * @param other_obj stack object to move resource from.
+ */
+template <datastructs::arithmetic T>
 Stack<T>& Stack<T>::operator=(Stack<T>&& other_obj) {
     m_capacity = other_obj.m_capacity;
     m_top = other_obj.m_top;
@@ -92,9 +117,14 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& other_obj) {
     return *this;
 }
 
-template <typename T>
+/**
+ * @brief Push function, to push data onto top of stack.
+ * @param val data to be pushed onto stack.
+ * @throws std::out_of_range, if stack is full.
+ */
+template <datastructs::arithmetic T>
 void Stack<T>::push(T val) {
-    if (m_top < m_capacity - 1) {
+    if (m_top < static_cast<int>(m_capacity) - 1) {
         ++m_top;
         m_stack[static_cast<std::size_t>(m_top)] = val;
         return;
@@ -103,15 +133,23 @@ void Stack<T>::push(T val) {
     throw std::out_of_range("Error: Stack is full");
 }
 
-// no bound checking done, will cause undefined behaviour if pop out of bound
-template <typename T>
+/**
+ * @brief Pop function, to remove data from top of stack.
+ * @return data stored on stack that was removed.
+ * @note Does not perform bound checking. Popping empty stack can cause UB.
+ */
+template <datastructs::arithmetic T>
 T Stack<T>::pop() {
     --m_top;
     return m_stack[static_cast<std::size_t>((m_top) + 1)];
 }
 
-// returns the top element by value without removing it
-template <typename T>
+/**
+ * @brief Peak function, to return data on top of stack without removing it.
+ * @return data stored on top of stack.
+ * @throws std::out_of_range, if stack is empty.
+ */
+template <datastructs::arithmetic T>
 T Stack<T>::peak() const {
     if (isEmpty()) {
         throw std::out_of_range("Error: Stack is empty so cannot be peaked.");
@@ -119,7 +157,11 @@ T Stack<T>::peak() const {
     return m_stack[static_cast<std::size_t>(m_top)];
 }
 
-template <typename T>
+/**
+ * @brief To check if the stack is empty.
+ * @return boolean data, true if stack is empty, false if otherwise
+ */
+template <datastructs::arithmetic T>
 bool Stack<T>::isEmpty() const {
     if (m_top < 0) {
         return true;
@@ -127,10 +169,22 @@ bool Stack<T>::isEmpty() const {
     return false;
 }
 
-// return current number of elements on stack
-template <typename T>
+/**
+ * @brief To return the number of elements on stack.
+ * @return number of elements.
+ */
+template <datastructs::arithmetic T>
 int Stack<T>::size() const {
     return m_top + 1;
+}
+
+/**
+ * @brief To return the total capacity of stack.
+ * @return stack capacity --> m_capacity.
+ */
+template <datastructs::arithmetic T>
+std::size_t Stack<T>::capacity() const {
+    return m_capacity;
 }
 
 } // namespace datastructs
