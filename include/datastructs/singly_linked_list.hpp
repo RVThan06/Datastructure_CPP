@@ -5,36 +5,52 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 namespace datastructs {
+
+/**
+ * @brief Node struct that forms each node in linked list.
+ * m_value -> stores data.
+ * m_nextptr -> stores pointer to next node.
+ */
 template <typename T>
 struct Node {
     T m_value{};
     std::unique_ptr<Node<T>> m_nextptr{nullptr};
 };
 
+/**
+ * @brief A template class for singly linked list data structure.
+ * @tparam T is restricted to arithmetic types (integral & floating-point).
+ */
 template <typename T>
 class LinkedList {
 public:
     // default constructor for empty list
     LinkedList() : m_headptr{nullptr} {}
-
     LinkedList(T);
     LinkedList(const LinkedList&);
     LinkedList(LinkedList&&) noexcept;
     LinkedList(std::initializer_list<T>);
     LinkedList& operator=(const LinkedList&);
     LinkedList& operator=(LinkedList&&) noexcept;
-    ~LinkedList();
+    ~LinkedList() {};
     void insert_front(T);
     void insert_back(T);
-    const Node<T>& search(T) const;
+    std::optional<T> search(T) const;
     void delete_front();
     void delete_back();
     bool is_empty() const;
     int length() const;
 
+    /**
+     * @brief ostream overload to print linked list
+     * @param out, the ostream object -> std::cout
+     * @param list, linked list object to be printed
+     * @returns ostream object by reference
+     */
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list) {
         Node<T>* next_nodeptr = list.m_headptr.get();
 
@@ -50,6 +66,10 @@ public:
         return out;
     }
 
+    /**
+     * @brief iterator class for linked list
+     * This is a forward iterator class.
+     */
     template <typename U>
     class Iterator {
     public:
@@ -61,7 +81,7 @@ public:
 
         Iterator(Node<std::remove_const_t<U>>* headptr) : current_ptr{headptr} {}
 
-        // dereferencing
+        // Dereferencing
         reference operator*() const { return current_ptr->m_value; }
         pointer operator->() const { return &(current_ptr->m_value); }
 
@@ -82,10 +102,8 @@ public:
         bool operator==(const Iterator& other_node) const { return current_ptr == other_node.current_ptr; }
 
     private:
-        Node<std::remove_const_t<U>>* current_ptr; // Node is not const event for a constant object
+        Node<std::remove_const_t<U>>* current_ptr; // Node is not const even for a constant object
     };
-
-    // Node<T>
 
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
@@ -104,29 +122,43 @@ private:
     int m_length = 0;
 };
 
+/**
+ * @brief construcot to initialise linked list with a single node.
+ * @param value the value for the first node created in list.
+ */
 template <typename T>
 LinkedList<T>::LinkedList(T value) : m_headptr{new Node<T>{value}} {}
 
-// copy constructur - use insert back
+/**
+ * @brief Copy constructor.
+ * Deep copying is done.
+ * @param other_list, list object to copy from.
+ */
 template <typename T>
 LinkedList<T>::LinkedList(const LinkedList& other_list) : m_headptr{nullptr} {
-    Node<T>* next_nodeptr = other_list.m_headptr.get();
-
-    while (next_nodeptr) {
-        insert_back(next_nodeptr->m_value);
-        next_nodeptr = next_nodeptr->m_nextptr.get();
+    for (const auto& node : other_list) {
+        insert_back(node);
     }
 }
 
-// move constructor
+/**
+ * @brief Move constructor.
+ * * Moves resources from another list object, leaves the moved object in valid state.
+ * @param other_list queue object to move resource from.
+ */
 template <typename T>
 LinkedList<T>::LinkedList(LinkedList&& other_list) noexcept
     : m_headptr{std::move(other_list.m_headptr)}, m_length{other_list.m_length} {
-    // leave other list in valid state
+    // leave movedlist in valid state
     other_list.m_length = 0;
 }
 
-// list constructor
+/**
+ * @brief List constructor.
+ * * Initialises a list using initilizer list by copying all the values in it
+ * to create a node for each value and form a list eventually.
+ * @param list, std::initializer list object.
+ */
 template <typename T>
 LinkedList<T>::LinkedList(std::initializer_list<T> list) : LinkedList() {
     for (std::size_t i = 0; i < list.size(); i++) {
@@ -135,7 +167,11 @@ LinkedList<T>::LinkedList(std::initializer_list<T> list) : LinkedList() {
     m_length = static_cast<int>(list.size());
 }
 
-// copy assignment
+/**
+ * @brief Copy assignment.
+ * Deep copying is done.
+ * @param other_list list object to copy from.
+ */
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other_list) {
     // self assignment check
@@ -144,24 +180,22 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList& other_list) {
     }
 
     // delete current list
-    while (m_headptr) {
-        std::unique_ptr<Node<T>> temp_node = std::move_if_noexcept(m_headptr);
-        m_headptr = std::move_if_noexcept(temp_node->m_nextptr);
-        // temp_node goes out of scope and dynamic memory is destroyed
-    }
+    m_headptr.reset();
 
-    // copy value to new list
-    Node<T>* next_nodeptr = other_list.m_headptr.get();
-    while (next_nodeptr) {
-        insert_back(next_nodeptr->m_value);
-        next_nodeptr = next_nodeptr->m_nextptr.get();
+    // copy data by interating other_list
+    for (const auto& node : other_list) {
+        insert_back(node);
     }
     m_length = other_list.m_length;
 
     return *this;
 }
 
-// move assignment
+/**
+ * @brief Move assignment.
+ * * Moves resources from another list object, leaves the moved object in valid state.
+ * @param other_list list object to move resource from.
+ */
 template <typename T>
 LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other_list) noexcept {
     // self assignment check
@@ -169,25 +203,21 @@ LinkedList<T>& LinkedList<T>::operator=(LinkedList&& other_list) noexcept {
         return *this;
     }
 
-    // delete current list
-    while (m_headptr) {
-        std::unique_ptr<Node<T>> temp_node = std::move(m_headptr);
-        m_headptr = std::move(temp_node->m_nextptr);
-        // temp_node goes out of scope and dynamic memory is destroyed
-    }
-
-    // move the list
+    // move the list - inherently will deallocate current list
     m_headptr = std::move(other_list.m_headptr);
     m_length = other_list.m_length;
+
+    // leave moved list in valid state
     other_list.m_length = 0;
 
     return *this;
 }
 
-// destructor
-template <typename T>
-LinkedList<T>::~LinkedList() {}
-
+/**
+ * @brief To insert a new node at the start of the list.
+ * Time complexity: O(1)
+ * @param value, the value for the new node to insert.
+ */
 template <typename T>
 void LinkedList<T>::insert_front(T value) {
     std::unique_ptr<Node<T>> new_node{new Node<T>{value}};
@@ -206,6 +236,12 @@ void LinkedList<T>::insert_front(T value) {
     return;
 }
 
+/**
+ * @brief To insert a new node at the end of the list.
+ * Time complexity: O(n).
+ * This operation requires full list traversal.
+ * @param value, the value for the new node to insert.
+ */
 template <typename T>
 void LinkedList<T>::insert_back(T value) {
     std::unique_ptr<Node<T>> new_node{new Node<T>{value}};
@@ -231,27 +267,38 @@ void LinkedList<T>::insert_back(T value) {
     }
 }
 
-// returns a const reference to node
+/**
+ * @brief To search for a given node based on the value it stores.
+ * Time complexity: O(n).
+ * This operation requires full list traversal.
+ * @param val, the value to search for
+ * @returns std::optional containing value if found, nullopt if not found
+ * @throws std::length_error, if list is empty
+ */
 template <typename T>
-const Node<T>& LinkedList<T>::search(T val) const {
+std::optional<T> LinkedList<T>::search(T val) const {
     if (!m_headptr) {
         throw std::length_error("Error: Empty list cannot be searched");
     }
-
     Node<T>* next_nodeptr = m_headptr.get();
 
     // if there is at least 1 node
     while (next_nodeptr) {
         if (next_nodeptr->m_value == val) {
-            return *next_nodeptr;
+            return next_nodeptr->m_value;
         }
-
         next_nodeptr = next_nodeptr->m_nextptr.get();
     }
 
-    throw std::runtime_error("Error: Value not found in list");
+    // value not found
+    return std::nullopt;
 }
 
+/**
+ * @brief To delete node from the front of list.
+ * Time complexity: O(1).
+ * @throws std::length_error, when trying to delete from an empty list.
+ */
 template <typename T>
 void LinkedList<T>::delete_front() {
     if (!m_headptr) {
@@ -264,6 +311,12 @@ void LinkedList<T>::delete_front() {
     return;
 }
 
+/**
+ * @brief To delete node from the rear of list.
+ * Time complexity: O(n).
+ * This operation requires full list traversal.
+ * @throws std::length_error, when trying to delete from an empty list.
+ */
 template <typename T>
 void LinkedList<T>::delete_back() {
     if (!m_headptr) {
@@ -291,15 +344,22 @@ void LinkedList<T>::delete_back() {
     }
 }
 
+/**
+ * @brief To check if list is empty.
+ * @return boolean data, true if list is empty, false if otherwise.
+ */
 template <typename T>
 bool LinkedList<T>::is_empty() const {
     if (m_headptr) {
         return false;
     }
-
     return true;
 }
 
+/**
+ * @brief To get the length of list.
+ * @return number of nodes in list.
+ */
 template <typename T>
 int LinkedList<T>::length() const {
     return m_length;
