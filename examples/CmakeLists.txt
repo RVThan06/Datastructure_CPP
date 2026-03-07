@@ -1,0 +1,20 @@
+# Find all .cpp files in this folder [cite: 1]
+file(GLOB EXAMPLE_SOURCES "*.cpp")
+
+foreach(example_source ${EXAMPLE_SOURCES})
+    # Extract the name (e.g., "stack_example.cpp" -> "stack_example") [cite: 1]
+    get_filename_component(example_name ${example_source} NAME_WE)
+
+    # Create a standalone executable for this specific example [cite: 1]
+    add_executable(${example_name} ${example_source})
+
+    # Link it to your data structures library so it inherits includes and C++20 flags [cite: 1]
+    target_link_libraries(${example_name} PRIVATE datastructs)
+
+    # Optional: Apply the same strict warnings we use for the library [cite: 1]
+    if(COMMAND set_project_warnings)
+        set_project_warnings(${example_name})
+    endif()
+
+    message(STATUS "Registered Example: ${example_name}")
+endforeach()
