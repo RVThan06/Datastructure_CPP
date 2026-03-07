@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
-#include <datastructs/utilities.hpp>
 #include <iostream>
 #include <memory>
 
@@ -16,7 +15,7 @@ namespace datastructs {
  * @tparam T is restricted to arithmetic types (integral & floating-point).
  */
 
-template <datastructs::arithmetic T>
+template <typename T>
 class Stack {
 public:
     Stack(std::size_t);
@@ -53,7 +52,7 @@ private:
  * @brief Constructs stack object for a given size.
  * @param size is the size of stack.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Stack<T>::Stack(std::size_t size) : m_capacity{size}, m_stack{std::make_unique<T[]>(m_capacity)} {}
 
 /**
@@ -61,7 +60,7 @@ Stack<T>::Stack(std::size_t size) : m_capacity{size}, m_stack{std::make_unique<T
  * Deep copying is done.
  * @param other_obj stack object to copy from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Stack<T>::Stack(const Stack& other_obj)
     : m_capacity{other_obj.m_capacity}, m_top{other_obj.m_top}, m_stack{std::make_unique<T[]>(m_capacity)} {
     std::copy_n(other_obj.m_stack.get(), m_capacity, m_stack.get());
@@ -72,7 +71,7 @@ Stack<T>::Stack(const Stack& other_obj)
  * Deep copying is done.
  * @param other_obj stack object to copy from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Stack<T>& Stack<T>::operator=(const Stack<T>& other_obj) {
     // self assignment check
     if (this == &other_obj) {
@@ -91,7 +90,7 @@ Stack<T>& Stack<T>::operator=(const Stack<T>& other_obj) {
  * * Moves resources from onether stack object, leaves the moved object in valid state.
  * @param other_obj stack object to move resource from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Stack<T>::Stack(Stack&& other_obj)
     : m_capacity{other_obj.m_capacity}, m_top{other_obj.m_top}, m_stack{std::move(other_obj.m_stack)} {
     // leave the moved object in valid state
@@ -104,7 +103,7 @@ Stack<T>::Stack(Stack&& other_obj)
  * * Moves resources from another stack object, leaves the moved object in valid state.
  * @param other_obj stack object to move resource from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Stack<T>& Stack<T>::operator=(Stack<T>&& other_obj) {
     m_capacity = other_obj.m_capacity;
     m_top = other_obj.m_top;
@@ -122,7 +121,7 @@ Stack<T>& Stack<T>::operator=(Stack<T>&& other_obj) {
  * @param val data to be pushed onto stack.
  * @throws std::out_of_range, if stack is full.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 void Stack<T>::push(T val) {
     if (m_top < static_cast<int>(m_capacity) - 1) {
         ++m_top;
@@ -138,7 +137,7 @@ void Stack<T>::push(T val) {
  * @return data stored on stack that was removed.
  * @note Does not perform bound checking. Popping empty stack can cause UB.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 T Stack<T>::pop() {
     --m_top;
     return m_stack[static_cast<std::size_t>((m_top) + 1)];
@@ -149,7 +148,7 @@ T Stack<T>::pop() {
  * @return data stored on top of stack.
  * @throws std::out_of_range, if stack is empty.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 T Stack<T>::peak() const {
     if (isEmpty()) {
         throw std::out_of_range("Error: Stack is empty so cannot be peaked.");
@@ -161,7 +160,7 @@ T Stack<T>::peak() const {
  * @brief To check if the stack is empty.
  * @return boolean data, true if stack is empty, false if otherwise
  */
-template <datastructs::arithmetic T>
+template <typename T>
 bool Stack<T>::isEmpty() const {
     if (m_top < 0) {
         return true;
@@ -173,7 +172,7 @@ bool Stack<T>::isEmpty() const {
  * @brief To return the number of elements on stack.
  * @return number of elements.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 int Stack<T>::size() const {
     return m_top + 1;
 }
@@ -182,7 +181,7 @@ int Stack<T>::size() const {
  * @brief To return the total capacity of stack.
  * @return stack capacity --> m_capacity.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 std::size_t Stack<T>::capacity() const {
     return m_capacity;
 }
