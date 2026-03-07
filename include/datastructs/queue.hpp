@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <concepts>
 #include <cstddef>
-#include <datastructs/utilities.hpp>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -17,7 +16,7 @@ namespace datastructs {
  * @tparam T is restricted to arithmetic types (integral & floating-point).
  */
 
-template <datastructs::arithmetic T>
+template <typename T>
 class Queue {
 public:
     Queue(std::size_t);
@@ -57,7 +56,7 @@ private:
  * @brief Constructor to initialise queue object.
  * @param size is the size of queue.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Queue<T>::Queue(std::size_t capacity)
     : m_head{-1}, m_tail{-1}, m_capacity{capacity}, m_queue{std::make_unique<T[]>(m_capacity)} {}
 
@@ -66,7 +65,7 @@ Queue<T>::Queue(std::size_t capacity)
  * Deep copying is done.
  * @param other_queue queue object to copy from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Queue<T>::Queue(const Queue& other_queue)
     : m_head{other_queue.m_head},
       m_tail{other_queue.m_tail},
@@ -80,7 +79,7 @@ Queue<T>::Queue(const Queue& other_queue)
  * Deep copying is done.
  * @param other_queue queue object to copy from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Queue<T>& Queue<T>::operator=(const Queue& other_queue) {
     // self assignment check
     if (this == &other_queue) {
@@ -105,7 +104,7 @@ Queue<T>& Queue<T>::operator=(const Queue& other_queue) {
  * * Moves resources from onether queue object, leaves the moved object in valid state.
  * @param other_queue queue object to move resource from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Queue<T>::Queue(Queue&& other_queue) noexcept
     : m_head{other_queue.m_head},
       m_tail{other_queue.m_tail},
@@ -122,7 +121,7 @@ Queue<T>::Queue(Queue&& other_queue) noexcept
  * * Moves resources from another queue object, leaves the moved object in valid state.
  * @param other_queue queue object to move resource from.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 Queue<T>& Queue<T>::operator=(Queue&& other_queue) noexcept {
     // self assignment check
     if (this == &other_queue) {
@@ -150,7 +149,7 @@ Queue<T>& Queue<T>::operator=(Queue&& other_queue) noexcept {
  * * Addition of data happens at the end of the queue.
  * @throws std::length_error, when trying to add data to queue that is full.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 void Queue<T>::enqueue(T value) {
     if (IsEmpty()) {
         ++m_head;
@@ -170,7 +169,7 @@ void Queue<T>::enqueue(T value) {
  * @return copy of data removed from front of queue.
  * @throws std::length_error, when trying to remove data from empty queue.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 T Queue<T>::dequeue() {
     if (IsEmpty()) {
         throw std::length_error("Queue is empty.");
@@ -191,7 +190,7 @@ T Queue<T>::dequeue() {
  * @throws std::length_error, when trying to peak from empty queue.
  * @return a copy of data at the front of the queue.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 T Queue<T>::front() const {
     if (IsEmpty()) {
         throw std::length_error("Queue is empty.");
@@ -204,7 +203,7 @@ T Queue<T>::front() const {
  * @brief To check if the queue is empty.
  * @return boolean data, true if queue is empty, false if otherwise.
  */
-template <datastructs::arithmetic T>
+template <typename T>
 bool Queue<T>::IsEmpty() const {
     if (m_head == -1 && m_tail == -1) {
         return true;
