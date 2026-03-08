@@ -1,6 +1,6 @@
 # DataStructs
 
-> 🚧 **Work in Progress:** The core header files for the data structures are implemented and functional. Comprehensive unit testing (via GoogleTest) and usage examples are currently under active development.
+> 🚧 **Work in Progress:** The core header files and usage examples are fully implemented. Comprehensive unit testing (via GoogleTest) is currently under active development.
 
 ## Overview
 
@@ -28,6 +28,44 @@ The library currently provides the following containers within the `datastructs:
 * **Singly linked list** (`<datastructs/singly_linked_list.hpp>`)
 * **Doubly linked list** (`<datastructs/doubly_linked_list.hpp>`)
 
+### 💻 Quick Start (Implementation)
+
+Vector operations
+
+```
+#include <iostream>
+#include <array>
+#include <datastructs/vector.hpp>
+#include <datastructs/linkedlist.hpp>
+
+int main() {
+    // --- Vector Example ---
+    std::cout << "--- Myvector Quick Start ---\n";
+    datastructs::Myvector<float> vector1;
+
+    for (int i = 0; i < 5; i++) {
+        vector1.push_back(i + 0.5f);
+    }
+
+    std::cout << "Vector Capacity: " << vector1.get_capacity() << "\n";
+    std::cout << "Vector Size: " << vector1.get_size() << "\n\n";
+
+    // --- Singly Linked List Example ---
+    std::cout << "--- Singly Linked List Quick Start ---\n";
+    std::array primes{2, 3, 5, 7, 11};
+    datastructs::LinkedList<int> prime_numbers;
+
+    // insert_front pushes elements to the head, reversing the order
+    for (const auto& val : primes) {
+        prime_numbers.insert_front(val);
+    }
+
+    std::cout << "Prime numbers (LIFO order): " << prime_numbers << "\n";
+
+    return 0;
+}
+```
+
 ## Quick Start (Integration)
 
 Since DataStructs is a CMake `INTERFACE` library, integrating it into your project is straightforward.
@@ -41,3 +79,4 @@ add_subdirectory(external/DataStructs)
 
 # Link it to your executable or library
 target_link_libraries(YourTargetName PRIVATE datastructs)
+
