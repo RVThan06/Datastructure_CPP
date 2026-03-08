@@ -4,9 +4,17 @@
 #include <initializer_list>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 namespace datastructs {
+
+/**
+ * @brief Node_d struct that forms each node in doubly linked list.
+ * m_value -> stores data.
+ * m_nextptr -> stores pointer to next node.
+ * m_prevptr -> stores pointer to prev node.
+ */
 template <typename T>
 struct Node_d {
     T m_value{};
@@ -14,28 +22,50 @@ struct Node_d {
     Node_d<T>* m_prevptr{nullptr};
 };
 
+/**
+ * @brief A template class for doubly linked list data structure.
+ * @note This class has bidirectional iterators implementation for integration into
+ * STL algorithms.
+ * @tparam T is the type of the data stored by the underlying datastructure.
+ */
 template <typename T>
 class DLinkedList {
 public:
-    // initialise empty list
+    /// @brief Default consrtuctor -> initialises an empty list
     DLinkedList() : m_headptr{nullptr}, m_tailptr{nullptr}, m_length{0} {}
 
-    DLinkedList(T value) : m_headptr{new Node_d<T>{value}}, m_tailptr{m_headptr}, m_length{1} {}
+    /// @brief Constructor to initialise list using value for the first node
+    explicit DLinkedList(T value) : m_headptr{new Node_d<T>{value}}, m_tailptr{m_headptr}, m_length{1} {}
 
+    /// @brief Destructor
     ~DLinkedList();
+
+    /// @brief Copy semantics
     DLinkedList(const DLinkedList& other_list);
-    DLinkedList(DLinkedList&& other_list) noexcept;
-    DLinkedList(std::initializer_list<T> list);
     DLinkedList& operator=(const DLinkedList& other_list);
+
+    /// @brief Move semantics
+    DLinkedList(DLinkedList&& other_list) noexcept;
     DLinkedList& operator=(DLinkedList&& other_list) noexcept;
+
+    /// @brief List constructor
+    DLinkedList(std::initializer_list<T> list);
+
+    /// @brief list operations
     void insert_front(T value);
     void insert_rear(T value);
     void delete_front();
     void delete_rear();
-    const Node_d<T>* search(T value) const;
+    std::optional<T> search(T value) const;
     int length() const { return m_length; }
     bool is_empty() const;
 
+    /**
+     * @brief ostream overload to print linked list
+     * @param out, the ostream object -> std::cout
+     * @param list, linked list object to be printed
+     * @returns ostream object by reference
+     */
     friend std::ostream& operator<<(std::ostream& out, const DLinkedList& list) {
         Node_d<T>* next_nodeptr = list.m_headptr;
         while (next_nodeptr != nullptr) {
@@ -49,7 +79,10 @@ public:
         return out;
     }
 
-    // Iterator class
+    /**
+     * @brief iterator class for doubly linked list
+     * This is a bidirectional iterator class.
+     */
     template <typename U>
     class Iterator {
     public:
@@ -120,6 +153,11 @@ private:
     int m_length;
 };
 
+/**
+ * @brief Destructor to deallocate heap memory
+ * This destructor will iterate through the list
+ * to destroy each node and deallocate heap memory.
+ */
 template <typename T>
 DLinkedList<T>::~DLinkedList() {
     // if any node is left at end of program
@@ -135,6 +173,11 @@ DLinkedList<T>::~DLinkedList() {
     }
 }
 
+/**
+ * @brief Copy constructor.
+ * Deep copying is done.
+ * @param other_list, list object to copy from.
+ */
 template <typename T>
 DLinkedList<T>::DLinkedList(const DLinkedList& other_list)
     : m_headptr{nullptr}, m_tailptr{nullptr}, m_length{other_list.m_length} {
@@ -145,6 +188,12 @@ DLinkedList<T>::DLinkedList(const DLinkedList& other_list)
     }
 }
 
+/**
+ * @brief Move constructor.
+ * * Moves resources from another list object, leaves the moved object in valid state.
+ * @param other_list queue object to move resource from.
+ * * @note this is a noexcept constructor, thus safe to use std::move_if_noexcept
+ */
 template <typename T>
 DLinkedList<T>::DLinkedList(DLinkedList&& other_list) noexcept
     : m_headptr{other_list.m_headptr}, m_tailptr{other_list.m_tailptr}, m_length{other_list.m_length} {
@@ -154,6 +203,12 @@ DLinkedList<T>::DLinkedList(DLinkedList&& other_list) noexcept
     other_list.m_length = 0;
 }
 
+/**
+ * @brief List constructor.
+ * * Initialises a list using initilizer list by copying all the values in it
+ * to create a node for each value and form a list eventually.
+ * @param list, std::initializer list object.
+ */
 template <typename T>
 DLinkedList<T>::DLinkedList(std::initializer_list<T> list) : DLinkedList() {
     for (std::size_t i = 0; i < list.size(); i++) {
@@ -163,6 +218,11 @@ DLinkedList<T>::DLinkedList(std::initializer_list<T> list) : DLinkedList() {
     m_length = static_cast<int>(list.size());
 }
 
+/**
+ * @brief Copy assignment.
+ * Deep copying is done.
+ * @param other_list list object to copy from.
+ */
 template <typename T>
 DLinkedList<T>& DLinkedList<T>::operator=(const DLinkedList<T>& other_list) {
     // self assignment check
@@ -186,6 +246,12 @@ DLinkedList<T>& DLinkedList<T>::operator=(const DLinkedList<T>& other_list) {
     return *this;
 }
 
+/**
+ * @brief Move assignment.
+ * * Moves resources from another list object, leaves the moved object in valid state.
+ * @param other_list list object to move resource from.
+ * @note this is a noexcept function, thus safe to use std::move_if_noexcept
+ */
 template <typename T>
 DLinkedList<T>& DLinkedList<T>::operator=(DLinkedList<T>&& other_list) noexcept {
     // self assignment check
@@ -211,6 +277,11 @@ DLinkedList<T>& DLinkedList<T>::operator=(DLinkedList<T>&& other_list) noexcept 
     return *this;
 }
 
+/**
+ * @brief To insert a new node at the start of the list.
+ * Time complexity: O(1)
+ * @param value, the value for the new node to insert.
+ */
 template <typename T>
 void DLinkedList<T>::insert_front(T value) {
     Node_d<T>* new_node = new Node_d<T>{value};
@@ -230,6 +301,11 @@ void DLinkedList<T>::insert_front(T value) {
     return;
 }
 
+/**
+ * @brief To insert a new node at the end of the list.
+ * Time complexity: O(1).
+ * @param value, the value for the new node to insert.
+ */
 template <typename T>
 void DLinkedList<T>::insert_rear(T value) {
     Node_d<T>* new_node = new Node_d<T>{value};
@@ -249,6 +325,11 @@ void DLinkedList<T>::insert_rear(T value) {
     return;
 }
 
+/**
+ * @brief To delete node from the front of list.
+ * Time complexity: O(1).
+ * @throws std::length_error, when trying to delete from an empty list.
+ */
 template <typename T>
 void DLinkedList<T>::delete_front() {
     // throw exception if node is empty
@@ -276,6 +357,11 @@ void DLinkedList<T>::delete_front() {
     return;
 }
 
+/**
+ * @brief To delete node from the end of list.
+ * Time complexity: O(1).
+ * @throws std::length_error, when trying to delete from an empty list.
+ */
 template <typename T>
 void DLinkedList<T>::delete_rear() {
     // throw exception if node is empty
@@ -303,26 +389,37 @@ void DLinkedList<T>::delete_rear() {
     return;
 }
 
+/**
+ * @brief To search for a given node based on the value it stores.
+ * Time complexity: O(n).
+ * This operation requires full list traversal.
+ * @param value, the value to search for
+ * @returns std::optional containing value if found, nullopt if not found
+ * @throws std::length_error, if list is empty
+ */
 template <typename T>
-const Node_d<T>* DLinkedList<T>::search(T value) const {
+std::optional<T> DLinkedList<T>::search(T value) const {
     // throw exception if node is empty
     if (!m_headptr) {
         throw std::length_error("Error: Empty list cannot be searched");
     }
 
-    // return pointer to node if node is found
     Node_d<T>* temp = m_headptr;
     while (temp != nullptr) {
         if (temp->m_value == value) {
-            return temp;
+            return temp->m_value;
         }
         temp = temp->m_nextptr;
     }
 
     // if node not found return nullptr
-    return nullptr;
+    return std::nullopt;
 }
 
+/**
+ * @brief To check if list is empty.
+ * @return boolean data, true if list is empty, false if otherwise.
+ */
 template <typename T>
 bool DLinkedList<T>::is_empty() const {
     if (!m_headptr) {
