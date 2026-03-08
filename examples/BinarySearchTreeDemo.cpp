@@ -13,7 +13,7 @@ void intialise_tree(datastructs::BinarySearchTree<T>& tree, std::array<T, N>& no
 
 int main() {
     /****************************************************************************************************
-     * DOUBLY LINKED LIST DEMO                                                                         **
+     * BINARY SEARCH TREE DEMO                                                                         **
      * **************************************************************************************************
      */
 
