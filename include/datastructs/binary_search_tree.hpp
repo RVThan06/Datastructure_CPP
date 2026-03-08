@@ -3,9 +3,18 @@
 
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stack>
+#include <stdexcept>
 
 namespace datastructs {
+
+/**
+ * @brief Node_bst struct that forms each node in binary search tree.
+ * m_value -> stores data.
+ * m_leftptr -> stores pointer to left node.
+ * m_rightptr -> stores pointer to right node.
+ */
 template <typename T>
 struct Node_bst {
     T m_value{};
@@ -13,34 +22,54 @@ struct Node_bst {
     std::unique_ptr<Node_bst<T>> m_rightptr{nullptr};
 };
 
+/**
+ * @brief A template class forbinary search tree data structure.
+ * @note This class has forward iterators implementation for integration into
+ * STL algorithms.
+ * @tparam T is the type of the data stored by the underlying datastructure.
+ */
 template <typename T>
 class BinarySearchTree {
 public:
+    /// @brief Default consrtuctor -> initialises an empty binary tree
     BinarySearchTree() : m_root{nullptr} {}
 
+    /// @brief Constructor to initialise tree using value for the first node
+    explicit BinarySearchTree(T value) : m_root{std::make_unique<Node_bst<T>>(value)} {}
+
+    /// @brief Destructor
     ~BinarySearchTree() {}
 
-    BinarySearchTree(T value) : m_root{new Node_bst<T>{value}} {}
+    /// @brief No copy semantics since its very expensive to copy
+    BinarySearchTree(const BinarySearchTree& other_tree) = delete;
+    BinarySearchTree& operator=(BinarySearchTree& other_tree) = delete;
 
-    BinarySearchTree(const BinarySearchTree& other_tree) = delete;      // no copy semantics
-    BinarySearchTree& operator=(BinarySearchTree& other_tree) = delete; // no copy semantics
-
+    /// @brief Move semantics
     BinarySearchTree(BinarySearchTree&& other_tree) noexcept : m_root{std::move(other_tree.m_root)} {}
-
     BinarySearchTree& operator=(BinarySearchTree&& other_tree) noexcept;
 
+    /// @brief Binary Search Tree operations
     void insert_node(T value) { insert(value, m_root); }
-    const Node_bst<T>& search_node(T value) const { return search(value, m_root); }
+    std::optional<T> search_node(T value) const { return search(value, m_root); }
     void delete_node(T value) { deletion(value, m_root); }
-
     const Node_bst<T>& find_minimum();
     const Node_bst<T>& find_maximum();
 
+    /**
+     * @brief ostream overload to print linked list
+     * @param out, the ostream object -> std::cout
+     * @param tree, binary search tree object to be printed
+     * @returns ostream object by reference
+     */
     friend std::ostream& operator<<(std::ostream& out, const BinarySearchTree& tree) {
         tree.in_order(tree.m_root, out);
         return out;
     }
 
+    /**
+     * @brief iterator class for binary search tree
+     * This is a forward iterator class.
+     */
     template <typename U>
     class Iterator {
     public:
@@ -81,7 +110,7 @@ public:
         }
     };
 
-    // iterator alias
+    /// @brief Iterator alias
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
 
@@ -95,9 +124,10 @@ public:
     const_iterator cend() const { return const_iterator(nullptr); }
 
 protected:
+    /// @brief Tree operations for internal class usage not available to public user
     void insert(T value, std::unique_ptr<Node_bst<T>>&);
     void in_order(const std::unique_ptr<Node_bst<T>>&, std::ostream&) const;
-    const Node_bst<T>& search(T value, const std::unique_ptr<Node_bst<T>>&) const;
+    std::optional<T> search(T value, const std::unique_ptr<Node_bst<T>>&) const;
     void deletion(T value, std::unique_ptr<Node_bst<T>>&);
     std::unique_ptr<Node_bst<T>>& find_min(std::unique_ptr<Node_bst<T>>&); // used internally in deletion()
 
@@ -105,6 +135,11 @@ private:
     std::unique_ptr<Node_bst<T>> m_root;
 };
 
+/**
+ * @brief Move assignment.
+ * * Moves resources from another tree object, leaves the moved object in valid state.
+ * @param other_tree list object to move resource from.
+ */
 template <typename T>
 BinarySearchTree<T>& BinarySearchTree<T>::operator=(BinarySearchTree&& other_tree) noexcept {
     // self assignment check
@@ -112,11 +147,54 @@ BinarySearchTree<T>& BinarySearchTree<T>::operator=(BinarySearchTree&& other_tre
         return *this;
     }
 
-    m_root.reset();
     m_root = std::move_if_noexcept(other_tree.m_root);
     return *this;
 }
 
+/**
+ * @brief A function to find the node with the minimum value
+ * @return A const reference to the minimum node.
+ */
+template <typename T>
+const Node_bst<T>& BinarySearchTree<T>::find_minimum() {
+    Node_bst<T>* temp_node = m_root.get();
+
+    while (temp_node) {
+        if (temp_node->m_leftptr) {
+            temp_node = temp_node->m_leftptr.get();
+            continue;
+        }
+        break;
+    }
+    return *temp_node;
+}
+
+/**
+ * @brief A function to find the node with the maximum value
+ * @return A const reference to the maximum node.
+ */
+template <typename T>
+const Node_bst<T>& BinarySearchTree<T>::find_maximum() {
+    Node_bst<T>* temp_node = m_root.get();
+
+    while (temp_node) {
+        if (temp_node->m_rightptr) {
+            temp_node = temp_node->m_rightptr.get();
+            continue;
+        }
+        break;
+    }
+    return *temp_node;
+}
+
+/**
+ * @brief Function to insert node into tree
+ * If new node <= current node -> insert in left subtree, else insert in right subtree
+ * This logic ensures that for any given head node, all nodes
+ * on left subtree are smaller and all nodes on right subtree are larger.
+ * @note This is an internal class function used in insert_node(), not accessible by public.
+ * @note Complexity: O(logn)
+ */
 template <typename T>
 void BinarySearchTree<T>::insert(T value, std::unique_ptr<Node_bst<T>>& node) {
     if (!node) {
@@ -135,6 +213,11 @@ void BinarySearchTree<T>::insert(T value, std::unique_ptr<Node_bst<T>>& node) {
     }
 }
 
+/**
+ * @brief Function to perform in order traversal.
+ * @note This function is an internal class function used for printing, not accessible by public.
+ * @note Complexity: O(n)
+ */
 template <typename T>
 void BinarySearchTree<T>::in_order(const std::unique_ptr<Node_bst<T>>& node, std::ostream& out) const {
     if (node->m_leftptr) {
@@ -149,14 +232,20 @@ void BinarySearchTree<T>::in_order(const std::unique_ptr<Node_bst<T>>& node, std
     return;
 }
 
+/**
+ * @brief Function to search for a given node.
+ * In each iteration the nodes to search gets halved, thus much faster at searching.
+ * @note This function is an internal class function used in search_node(), not accessible by public.
+ * @note Complexity: O(logn)
+ */
 template <typename T>
-const Node_bst<T>& BinarySearchTree<T>::search(T value, const std::unique_ptr<Node_bst<T>>& node) const {
+std::optional<T> BinarySearchTree<T>::search(T value, const std::unique_ptr<Node_bst<T>>& node) const {
     if (!node) {
         throw(std::runtime_error("Node not found"));
     }
 
     if (value == node->m_value) {
-        return *node.get();
+        return node->m_value;
     }
 
     if (value < node->m_value) {
@@ -166,6 +255,12 @@ const Node_bst<T>& BinarySearchTree<T>::search(T value, const std::unique_ptr<No
     }
 }
 
+/**
+ * @brief Function to perform deleteion if a given node.
+ * @note This function is an internal class function used for printing, not accessible by public.
+ * @note Complexity: O(n)
+ * @throws std::runtime_error is the node to be delete is not present in tree.
+ */
 template <typename T>
 void BinarySearchTree<T>::deletion(T value, std::unique_ptr<Node_bst<T>>& node) {
     if (!node) {
@@ -208,6 +303,7 @@ void BinarySearchTree<T>::deletion(T value, std::unique_ptr<Node_bst<T>>& node) 
     }
 }
 
+/// @brief Internal fucntion used to find the minimum node by traversing the lest subtree till end
 template <typename T>
 std::unique_ptr<Node_bst<T>>& BinarySearchTree<T>::find_min(std::unique_ptr<Node_bst<T>>& node) {
     if (node->m_leftptr) {
@@ -215,34 +311,6 @@ std::unique_ptr<Node_bst<T>>& BinarySearchTree<T>::find_min(std::unique_ptr<Node
     } else {
         return node;
     }
-}
-
-template <typename T>
-const Node_bst<T>& BinarySearchTree<T>::find_minimum() {
-    Node_bst<T>* temp_node = m_root.get();
-
-    while (temp_node) {
-        if (temp_node->m_leftptr) {
-            temp_node = temp_node->m_leftptr.get();
-            continue;
-        }
-        break;
-    }
-    return *temp_node;
-}
-
-template <typename T>
-const Node_bst<T>& BinarySearchTree<T>::find_maximum() {
-    Node_bst<T>* temp_node = m_root.get();
-
-    while (temp_node) {
-        if (temp_node->m_rightptr) {
-            temp_node = temp_node->m_rightptr.get();
-            continue;
-        }
-        break;
-    }
-    return *temp_node;
 }
 
 } // namespace datastructs
