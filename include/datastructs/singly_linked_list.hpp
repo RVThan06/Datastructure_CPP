@@ -105,6 +105,7 @@ public:
         Node<std::remove_const_t<U>>* current_ptr; // Node is not const even for a constant object
     };
 
+    /// @brief Iterator alias
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
 

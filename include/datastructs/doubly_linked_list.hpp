@@ -132,6 +132,7 @@ public:
         Node_d<std::remove_const_t<T>>* current;
     };
 
+    /// @brief Iterator alias
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
 
