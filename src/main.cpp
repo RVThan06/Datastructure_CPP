@@ -9,7 +9,7 @@
 #include <datastructs/vector.hpp>
 #include <iostream>
 
-template <typename T, int N>
+template <typename T, std::size_t N>
 void intialise_tree(datastructs::BinarySearchTree<T>& tree, std::array<T, N>& nodes) {
     for (const auto& val : nodes) {
         tree.insert_node(val);
@@ -20,7 +20,7 @@ int main() {
     // 1. Intialsing stack
     std::cout << "Initisalising stack 1" << "\n";
     int size = 5;
-    datastructs::Stack<int> stack1(size);
+    datastructs::Stack<float> stack1(static_cast<std::size_t>(size));
     std::cout << "Size of stack 1: " << stack1.size() << "\n";
 
     // 1. Initialise a queue object and try to enqueue beyond it's limit
