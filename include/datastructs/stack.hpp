@@ -33,7 +33,7 @@ public:
     int size() const;
     std::size_t capacity() const;
 
-    // tp print stack elements
+    /// @brief Ostream overload for printing of linked list
     friend std::ostream& operator<<(std::ostream& out, const Stack& stack) {
         for (int i = 0; i <= stack.m_top; i++) {
             out << stack.m_stack[static_cast<std::size_t>(i)] << ", ";

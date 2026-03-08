@@ -55,12 +55,7 @@ public:
     const Node_bst<T>& find_minimum();
     const Node_bst<T>& find_maximum();
 
-    /**
-     * @brief ostream overload to print linked list
-     * @param out, the ostream object -> std::cout
-     * @param tree, binary search tree object to be printed
-     * @returns ostream object by reference
-     */
+    /// @brief Ostream overload for printing of linked list
     friend std::ostream& operator<<(std::ostream& out, const BinarySearchTree& tree) {
         tree.in_order(tree.m_root, out);
         return out;

@@ -28,7 +28,7 @@ struct Node {
 template <typename T>
 class LinkedList {
 public:
-    // default constructor for empty list
+    /// @brief Constructors and assignment
     LinkedList() : m_headptr{nullptr} {}
     explicit LinkedList(T);
     LinkedList(const LinkedList&);
@@ -37,6 +37,8 @@ public:
     LinkedList& operator=(const LinkedList&);
     LinkedList& operator=(LinkedList&&) noexcept;
     ~LinkedList() {};
+
+    /// @brief Linked list operations
     void insert_front(T);
     void insert_back(T);
     std::optional<T> search(T) const;
@@ -45,12 +47,7 @@ public:
     bool is_empty() const;
     int length() const;
 
-    /**
-     * @brief ostream overload to print linked list
-     * @param out, the ostream object -> std::cout
-     * @param list, linked list object to be printed
-     * @returns ostream object by reference
-     */
+    /// @brief Ostream overload for printing of linked list
     friend std::ostream& operator<<(std::ostream& out, const LinkedList& list) {
         Node<T>* next_nodeptr = list.m_headptr.get();
 
@@ -145,7 +142,7 @@ LinkedList<T>::LinkedList(const LinkedList& other_list) : m_headptr{nullptr} {
 /**
  * @brief Move constructor.
  * * Moves resources from another list object, leaves the moved object in valid state.
- * @param other_list queue object to move resource from.
+ * @param other_list list object to move resource from.
  */
 template <typename T>
 LinkedList<T>::LinkedList(LinkedList&& other_list) noexcept

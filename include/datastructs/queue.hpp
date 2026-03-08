@@ -32,7 +32,7 @@ public:
     T front() const;
     bool IsEmpty() const;
 
-    // ostream overload
+    /// @brief Ostream overload for printing of linked list
     friend std::ostream& operator<<(std::ostream& out, const Queue& queue) {
         if (!queue.IsEmpty()) {
             int temp_head = queue.m_head;

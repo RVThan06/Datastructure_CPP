@@ -60,12 +60,7 @@ public:
     int length() const { return m_length; }
     bool is_empty() const;
 
-    /**
-     * @brief ostream overload to print linked list
-     * @param out, the ostream object -> std::cout
-     * @param list, linked list object to be printed
-     * @returns ostream object by reference
-     */
+    /// @brief Ostream overload for printing of linked list
     friend std::ostream& operator<<(std::ostream& out, const DLinkedList& list) {
         Node_d<T>* next_nodeptr = list.m_headptr;
         while (next_nodeptr != nullptr) {
