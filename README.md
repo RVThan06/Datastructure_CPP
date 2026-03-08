@@ -30,8 +30,6 @@ The library currently provides the following containers within the `datastructs:
 
 ### 💻 Quick Start (Implementation)
 
-Vector operations
-
 ```
 #include <iostream>
 #include <array>
