@@ -30,7 +30,7 @@ class LinkedList {
 public:
     // default constructor for empty list
     LinkedList() : m_headptr{nullptr} {}
-    LinkedList(T);
+    explicit LinkedList(T);
     LinkedList(const LinkedList&);
     LinkedList(LinkedList&&) noexcept;
     LinkedList(std::initializer_list<T>);
