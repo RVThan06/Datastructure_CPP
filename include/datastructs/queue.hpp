@@ -13,7 +13,7 @@ namespace datastructs {
 /**
  * @brief A templated queue data structure.
  * * This class implements queue data structure that uses first-in first-out mechanism.
- * @tparam T is restricted to arithmetic types (integral & floating-point).
+ * @tparam T is the type of the data stored by the underlying datastructure.
  */
 
 template <typename T>

@@ -23,7 +23,7 @@ struct Node {
 
 /**
  * @brief A template class for singly linked list data structure.
- * @tparam T is restricted to arithmetic types (integral & floating-point).
+ * @tparam T is the type of the data stored by the underlying datastructure.
  */
 template <typename T>
 class LinkedList {

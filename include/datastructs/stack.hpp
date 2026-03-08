@@ -12,7 +12,7 @@ namespace datastructs {
 /**
  * @brief A templated stack data structure.
  * * This class implements stack data structure with Last-in first-out mechanism.
- * @tparam T is restricted to arithmetic types (integral & floating-point).
+ * @tparam T is the type of the data stored by the underlying datastructure.
  */
 
 template <typename T>
