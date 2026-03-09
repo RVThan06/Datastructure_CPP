@@ -10,10 +10,16 @@ Built with modern C++ paradigms in mind, the library leverages C++20 features an
 
 ## Features
 
-* **Header-Only Architecture:** No separate compilation step is required. Simply link the library via CMake and `#include` the necessary headers.
-* **Modern C++20:** Takes advantage of the latest language standards for cleaner syntax and safer type constraints.
-* **Strict Quality Controls:** Configured to compile cleanly under stringent compiler flags (e.g., `-Wall`, `-Wextra`, `-Wpedantic`, `-Wconversion` for GCC/Clang, and `/W4` for MSVC).
-* **Standardized Layout:** Follows the Pitchfork project layout for professional and predictable directory organization.
+### Architecture & Tooling
+* **Header-Only Design:** No separate compilation step is required. Simply link the library via CMake and `#include` the necessary headers.
+* **Strict Quality Controls:** Configured to compile cleanly under stringent compiler warnings (e.g., `-Wall`, `-Wextra`, `-Wpedantic`, `-Wconversion` for GCC/Clang, and `/W4` for MSVC) to guarantee memory safety.
+* **Standardized Layout:** Adheres to the Pitchfork project layout for predictable, professional directory organization.
+
+### Modern C++ Implementations
+* **Robust Resource Management (RAII):** Utilizes `std::unique_ptr` under the hood for dynamic memory allocations, ensuring automatic, leak-free cleanup and strong exception safety.
+* **Optimized Copy & Move Semantics:** Fully implements the Rule of Five. Containers support deep copying for data integrity and highly efficient move constructors/assignment operators for zero-allocation data transfers.
+* **STL-Compatible Iterators:** Containers feature custom iterators, allowing them to plug seamlessly into range-based `for` loops and standard library algorithms (e.g., `std::find`, `std::sort` from `<algorithm>`).
+* **Ergonomic Initialization:** Includes `std::initializer_list` constructors for the Vector, Array, and Linked List, enabling clean, brace-enclosed instantiation (e.g., `datastructs::Myvector<int> vec = {1, 2, 3, 4};`).
 
 ## Implemented Data Structures
 
@@ -64,7 +70,31 @@ int main() {
 }
 ```
 
-## Quick Start (Integration)
+### Quick Start (STL algorithm via custom Iterator)
+```
+#include <iostream>
+#include <array>
+#include <datastructs/linkedlist.hpp>
+
+int main() {
+
+    datastructs::LinkedList<int> sample_1 {1, 2, 3, 4, 5};
+    datastructs::LinkedList<int> sample_2 {0, 0, 0, 0, 0};
+
+    // 1. std::copy
+    std::copy(sample_1.begin(), sample_1.end(), sample_2.begin());
+    std::cout << "Sample 1: " << sample_1 << "\n";
+    std::cout << "Sample 2: " << sample_2 << "\n\n";
+
+    // 2. std::copy_if
+    auto is_even = [](int x) { return x % 2 == 0; };
+    std::copy_if(even_numbers_2.begin(), even_numbers_2.end(), sample_2.begin(), is_even);
+    std::cout << "Sample 2: " << sample_2 << "\n\n";
+    return 0;
+}
+```
+
+## Integration
 
 Since DataStructs is a CMake `INTERFACE` library, integrating it into your project is straightforward.
 
