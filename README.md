@@ -74,6 +74,7 @@ int main() {
 ```
 #include <iostream>
 #include <array>
+#include <algorithm>
 #include <datastructs/linkedlist.hpp>
 
 int main() {
