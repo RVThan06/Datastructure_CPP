@@ -16,5 +16,6 @@ foreach(example_source ${EXAMPLE_SOURCES})
         set_project_warnings(${example_name})
     endif()
 
+
     message(STATUS "Registered Example: ${example_name}")
 endforeach()
