@@ -1,0 +1,31 @@
+name: C++ CI Pipeline
+
+# 1. When should this pipeline run?
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    # 2. Operating system for CI server to use
+    runs-on: ubuntu-latest
+
+    steps:
+    # 3. Download repository's code onto the CI server
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 4. Configure CMake (Turn ON the tests explicitly)
+    - name: Configure CMake
+      run: cmake -B build -S . -DDATASTRUCTS_BUILD_TESTS=ON -DDATASTRUCTS_BUILD_EXAMPLES=ON
+
+    # 5. Compile the library, examples, and GoogleTests
+    - name: Build Project
+      run: cmake --build build
+
+    # 6. Run CTest to execute all test executables
+    - name: Run Unit Tests
+      working-directory: ${{github.workspace}}/build
+      run: ctest --output-on-failure
