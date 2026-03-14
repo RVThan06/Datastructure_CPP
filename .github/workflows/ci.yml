@@ -11,6 +11,9 @@ jobs:
   build-and-test:
     # 2. Operating system for CI server to use
     runs-on: ubuntu-latest
+    # To silence Node 20 warning
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
     # 3. Download repository's code onto the CI server
