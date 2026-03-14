@@ -20,6 +20,12 @@ namespace datastructs {
 template <typename T>
 class Myvector {
 public:
+    /// @brief Container traits
+    using value_type = T;
+    using reference = T&;
+    using const_reference = const T&;
+    using size_type = size_t;
+
     /// @brief Constructors and assignment overloads
     Myvector(std::size_t = 0, T = {});
     ~Myvector() {}
@@ -29,7 +35,7 @@ public:
     Myvector(Myvector&&) noexcept;
     Myvector& operator=(Myvector&&) noexcept;
 
-    // vector functions
+    /// @brief Vector functions
     void push_back(T);
     void pop_back();
     T& operator[](std::size_t);
@@ -58,6 +64,7 @@ public:
     template <typename U>
     class VectorIterator {
     public:
+        /// @brief Iterator traits
         using value_type = std::remove_const_t<U>;
         using difference_type = std::ptrdiff_t;
         using pointer = U*;
