@@ -80,3 +80,20 @@ if(DATASTRUCTS_BUILD_SANDBOX AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cp
     # Allow sandbox to include its own local headers if needed
     target_include_directories(Sandbox PRIVATE src)
 endif()
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    # Set the input and output paths for the Doxyfile
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile)
+
+    # Create a custom 'docs' target
+    add_custom_target(docs
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen..."
+        VERBATIM
+    )
+    message(STATUS "Doxygen found: 'docs' target created.")
+else()
+    message(STATUS "Doxygen not found. Documentation will not be generated.")
+endif()

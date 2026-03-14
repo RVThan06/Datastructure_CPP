@@ -48,3 +48,7 @@ install_manifest.txt
 # --- OS Specifics ---
 .DS_Store
 Thumbs.db
+
+# Doxygen generated documentation
+docs/html/
+html/
