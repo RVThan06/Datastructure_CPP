@@ -3,6 +3,7 @@
 
 #include <initializer_list>
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -77,17 +78,26 @@ public:
     /**
      * @brief iterator class for doubly linked list
      * This is a bidirectional iterator class.
+     * @tparam U is the value type of container item.
+     * * U could be const T or T depending on whether the underlying container is const or not.
      */
     template <typename U>
     class Iterator {
     public:
-        using value_type = std::remove_const_t<T>;
+        using value_type = std::remove_const_t<U>;
         using difference_type = std::ptrdiff_t;
-        using pointer = T*;
-        using reference = T&;
+        using pointer = U*;
+        using reference = U&;
         using iterator_category = std::bidirectional_iterator_tag;
 
-        explicit Iterator(Node_d<std::remove_const_t<T>>* node) : current(node) {}
+        /**
+         * @brief Constructor of Iterator
+         * @note takes the tail pointer of linked list, to store as memory incase
+         * * of reverse iteration since rbegin() points to nullptr end(), so it needs to
+         * know how to get back to tail ptr to iterate from the back.
+         */
+        Iterator(Node_d<std::remove_const_t<U>>* node, Node_d<std::remove_const_t<U>>* tail)
+            : current{node}, tail_ptr{tail} {}
 
         // Dereference
         reference operator*() const { return current->m_value; }
@@ -106,42 +116,67 @@ public:
             return temp;
         }
 
-        // Pre-decrement
+        /**
+         * @brief Pre-decrement
+         * @note checks to see if reverse iterator is starting at nullptr -> end()
+         */
         Iterator& operator--() {
-            current = current->m_prevptr;
+            if (!current) {
+                current = tail_ptr;
+            } else {
+                current = current->m_prevptr;
+            }
+
             return *this;
         }
 
-        // Post-decrement
+        /// @brief Post decrement
         Iterator operator--(int) {
             Iterator temp = *this;
             --(*this);
             return temp;
         }
 
-        // Equality operators
+        /// @brief Equality operator overload
         bool operator!=(const Iterator& other_node) const { return current != other_node.current; }
         bool operator==(const Iterator& other_node) const { return current == other_node.current; }
 
     private:
-        Node_d<std::remove_const_t<T>>* current;
+        Node_d<std::remove_const_t<U>>* current; // Node_d<T> not Node_D<const T> even for const list objects
+        Node_d<std::remove_const_t<U>>* tail_ptr;
     };
 
     /// @brief Iterator alias
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
 
-    iterator begin() { return iterator(m_headptr); }
-    iterator end() { return iterator(nullptr); }
+    /// @brief Reverse iterator alias using STL generted reverse iterator
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-    iterator rbegin() { return iterator(m_tailptr); }
-    iterator rend() { return iterator(nullptr); }
+    /// @brief Non -const Forward iterator member function
+    iterator begin() { return iterator(m_headptr, m_tailptr); }
+    iterator end() { return iterator(nullptr, m_tailptr); }
 
-    const_iterator begin() const { return const_iterator(m_headptr); }
-    const_iterator end() const { return const_iterator(nullptr); }
+    /// @brief Implicit constant forward iterators - overloads to begin & end
+    const_iterator begin() const { return const_iterator(m_headptr, m_tailptr); }
+    const_iterator end() const { return const_iterator(nullptr, m_tailptr); }
 
-    const_iterator cbegin() const { return const_iterator(m_headptr); }
-    const_iterator cend() const { return const_iterator(nullptr); }
+    /// @brief Explicit const forward interators
+    const_iterator cbegin() const { return const_iterator(m_headptr, m_tailptr); }
+    const_iterator cend() const { return const_iterator(nullptr, m_tailptr); }
+
+    /// @brief Non -const reverse iterator member function
+    reverse_iterator rbegin() { return reverse_iterator(end()); }
+    reverse_iterator rend() { return reverse_iterator(begin()); }
+
+    /// @brief Implicit constant reverse iterators - overloads to rbegin & rend
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+
+    /// @brief Explicit const reverse interators
+    const_reverse_iterator crbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator crend() const { return const_reverse_iterator(begin()); }
 
 private:
     Node_d<T>* m_headptr;
