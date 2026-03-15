@@ -66,52 +66,63 @@ public:
     /**
      * @brief iterator class for linked list
      * This is a forward iterator class.
+     * @tparam U is the value type of container item.
+     * * U could be const T or T depending on whether the underlying container is const or not.
      */
     template <typename U>
     class Iterator {
     public:
-        using value_type = std::remove_const_t<U>;
+        /// @brief Iterator traits
+        using value_type = std::remove_const_t<U>; // remove const since container item type is always T not const T
         using difference_type = std::ptrdiff_t;
         using pointer = U*;
         using reference = U&;
         using iterator_category = std::forward_iterator_tag;
 
-        Iterator(Node<std::remove_const_t<U>>* headptr) : current_ptr{headptr} {}
+        /**
+         * @brief Constructor
+         * @param headptr, the head pointer of list.
+         */
+        explicit Iterator(Node<std::remove_const_t<U>>* headptr) : current_ptr{headptr} {}
 
-        // Dereferencing
+        /// @brief Dereferencing operators
         reference operator*() const { return current_ptr->m_value; }
         pointer operator->() const { return &(current_ptr->m_value); }
 
-        // Pre-increment
+        /// @brief pre-increment
         Iterator& operator++() {
             current_ptr = current_ptr->m_nextptr.get();
             return *this;
         }
 
-        // Post-increment
+        /// @brief Post-increment
         Iterator operator++(int) {
             Iterator tmp = *this;
             ++(*this);
             return tmp;
         }
 
+        /// @brief Equality overloads
         bool operator!=(const Iterator& other_node) const { return current_ptr != other_node.current_ptr; }
         bool operator==(const Iterator& other_node) const { return current_ptr == other_node.current_ptr; }
 
     private:
-        Node<std::remove_const_t<U>>* current_ptr; // Node is not const even for a constant object
+        Node<std::remove_const_t<U>>* current_ptr; // Node<T> not Node<const T> even for const list objects
     };
 
     /// @brief Iterator alias
     using iterator = Iterator<T>;
     using const_iterator = Iterator<const T>;
 
+    /// @brief Non -const Forward iterator member function
     iterator begin() { return iterator(m_headptr.get()); }
     iterator end() { return iterator(nullptr); }
 
+    /// @brief Implicit constant forward iterators - overloads to begin & end
     const_iterator begin() const { return const_iterator(m_headptr.get()); }
     const_iterator end() const { return const_iterator(nullptr); }
 
+    /// @brief Explicit const forward interators
     const_iterator cbegin() const { return const_iterator(m_headptr.get()); }
     const_iterator cend() const { return const_iterator(nullptr); }
 
