@@ -44,7 +44,7 @@ public:
      * @note Complexity: O(n) since n number of moves must be performed.
      * @param other_array array object to move resource from.
      */
-    MyArray(const MyArray&& other_array) noexcept {
+    MyArray(MyArray&& other_array) noexcept {
         // element wise move semantics
         for (std::size_t i = 0; i < m_size; i++) {
             array[i] = std::move_if_noexcept(other_array.array[i]);
@@ -83,7 +83,7 @@ public:
      * @note Does not move the array memery since array is on stack.
      * @param other_array array object to move resource from.
      */
-    MyArray& operator=(const MyArray&& other_array) noexcept {
+    MyArray& operator=(MyArray&& other_array) noexcept {
         if (&other_array == this) {
             return *this;
         }
