@@ -27,7 +27,8 @@ public:
     using size_type = size_t;
 
     /// @brief Constructors and assignment overloads
-    Myvector(std::size_t = 0, T = {});
+    Myvector(std::size_t = 0);
+    Myvector(std::size_t, T = {});
     ~Myvector() {}
     Myvector(std::initializer_list<T>);
     Myvector(const Myvector&);
@@ -155,14 +156,23 @@ protected:
  * @brief Default constructor.
  * By default initialises an empty vector.
  * @param size, the size of vector, the number of elements in it. Default = 0
- * @param val, the value to use to initisalise vector elements if size > 0,if not provided then all elements will
- * be default initialised.
+ */
+template <typename T>
+Myvector<T>::Myvector(std::size_t size)
+    : m_capacity{(size + 4)}, m_size{size}, array{std::make_unique<T[]>(size + 4)} {}
+
+/**
+ * @brief Paramaterized Constructor.
+ * Initialises a vector of a particular size.
+ * @param size, the size of vector, the number of elements in it.
+ * @param val, the value to use to initisalise vector elements ,if not provided then all elements will
+ * be value list initialised.
  */
 template <typename T>
 Myvector<T>::Myvector(std::size_t size, T val)
     : m_capacity{(size + 4)}, m_size{size}, array{std::make_unique<T[]>(size + 4)} {
     for (std::size_t i = 0; i < m_size; ++i) {
-        array[static_cast<std::size_t>(i)] = val;
+        array[i] = val;
     }
 }
 
