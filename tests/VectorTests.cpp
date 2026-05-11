@@ -3,7 +3,7 @@
 #include <datastructs/vector.hpp>
 #include <iterator>
 
-TEST(VectorTest, Construction) {
+TEST(VectorTest, DefaultConstruction) {
     datastructs::Myvector<int> vector1;
 
     // 1. default initialisation expect empty vector
@@ -19,6 +19,25 @@ TEST(VectorTest, Construction) {
 
     EXPECT_EQ(vector1.get_size(), 5);
     EXPECT_EQ(vector1[3], 3);
+}
+
+TEST(VectorTest, ValueConstructor) {
+    datastructs::Myvector<int> vector1(5, 10);
+
+    // 1. Value initialisation with size of 5
+    EXPECT_EQ(vector1.get_size(), 5);
+
+    // 2. to validate vector capacity is independant of size
+    EXPECT_GT(vector1.get_capacity(), 5);
+
+    // 3. Validate push_back upon construction
+    for (int i = 0; i < 5; ++i) {
+        vector1.push_back(i);
+    }
+
+    EXPECT_EQ(vector1.get_size(), 10);
+    EXPECT_EQ(vector1[3], 10);
+    EXPECT_EQ(vector1[9], 4);
 }
 
 TEST(VectorTest, ListConstructor) {
