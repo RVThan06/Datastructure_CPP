@@ -55,13 +55,18 @@ public:
      * @brief List constructor.
      * * Initialises a an array using initilizer list by copying all the values in it.
      * @param lst, std::initializer list object.
-     * @throws std::out_of_range, if initializer list is not equal to array
+     * @throws std::out_of_range, if initializer list is larger than array
      */
     MyArray(std::initializer_list<T> lst) {
-        if (lst.size() != N) {
-            throw std::out_of_range("List size not equal to array.\n");
+        if (lst.size() > N) {
+            throw std::out_of_range("List size is larger than array.\n");
         }
-        std::copy_n(lst.begin(), m_size, array);
+        std::copy_n(lst.begin(), lst.size(), array);
+
+        if (N != lst.size()) {
+            T val{};
+            std::fill_n(array + lst.size(), N - lst.size(), val);
+        }
     }
 
     /**
