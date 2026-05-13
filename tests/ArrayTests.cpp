@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cstddef>
-#include <datastructs/Array.hpp>
+#include <datastructs/array.hpp>
 #include <iterator>
 
 TEST(ArrayTest, DefaultConstruction) {
