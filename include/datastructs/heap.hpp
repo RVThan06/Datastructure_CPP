@@ -23,7 +23,6 @@ public:
     explicit MaxHeap(T);
     MaxHeap(const MaxHeap&);
     MaxHeap(MaxHeap&&) noexcept;
-    MaxHeap(std::initializer_list<T>);
     MaxHeap& operator=(const MaxHeap&);
     MaxHeap& operator=(MaxHeap&& other_heap) noexcept;
 
@@ -71,17 +70,6 @@ MaxHeap<T>::MaxHeap(const MaxHeap& other_heap) : max_heap{other_heap.max_heap} {
  */
 template <typename T>
 MaxHeap<T>::MaxHeap(MaxHeap&& other_heap) noexcept : max_heap{std::move(other_heap.max_heap)} {}
-
-/**
- * @brief List constructor.
- * * Initialises a heap using initilizer list by copying all the values in it
- * to create a node for each value and form a heap eventually.
- * @param llist, std::initializer list object.
- */
-template <typename T>
-MaxHeap<T>::MaxHeap(std::initializer_list<T> llist) : MaxHeap() {
-    std::copy(llist.begin(), llist.end(), std::back_inserter(max_heap));
-}
 
 /**
  * @brief Copy assignment.
