@@ -1,6 +1,5 @@
 # DataStructs
 
-> 🚧 **Work in Progress:** The core header files and usage examples are fully implemented. Comprehensive unit testing (via GoogleTest) is currently under active development.
 
 ## Overview
 
