@@ -90,8 +90,8 @@ public:
             return *this;
         }
 
-        bool operator!=(const Iterator& other_iterator) { return tree_stack != other_iterator.tree_stack; }
-        bool operator==(const Iterator& other_iterator) { return tree_stack == other_iterator.tree_stack; }
+        bool operator!=(const Iterator& other_iterator) const { return tree_stack != other_iterator.tree_stack; }
+        bool operator==(const Iterator& other_iterator) const { return tree_stack == other_iterator.tree_stack; }
 
     private:
         std::stack<Node_bst<std::remove_const_t<U>>*> tree_stack;
