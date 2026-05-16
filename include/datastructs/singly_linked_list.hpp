@@ -136,7 +136,7 @@ private:
  * @param value the value for the first node created in list.
  */
 template <typename T>
-LinkedList<T>::LinkedList(T value) : m_headptr{new Node<T>{value}} {}
+LinkedList<T>::LinkedList(T value) : m_headptr{new Node<T>{value}}, m_length{1} {}
 
 /**
  * @brief Copy constructor.
