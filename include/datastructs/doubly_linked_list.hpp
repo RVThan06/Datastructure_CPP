@@ -210,8 +210,7 @@ DLinkedList<T>::~DLinkedList() {
  * @param other_list, list object to copy from.
  */
 template <typename T>
-DLinkedList<T>::DLinkedList(const DLinkedList& other_list)
-    : m_headptr{nullptr}, m_tailptr{nullptr}, m_length{other_list.m_length} {
+DLinkedList<T>::DLinkedList(const DLinkedList& other_list) : m_headptr{nullptr}, m_tailptr{nullptr}, m_length{0} {
     Node_d<T>* next_nodeptr = other_list.m_headptr;
     while (next_nodeptr) {
         insert_rear(next_nodeptr->m_value);
