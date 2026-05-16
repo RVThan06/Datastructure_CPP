@@ -44,6 +44,8 @@ TEST(SinglyListTest, ParamConstruction) {
     ASSERT_EQ(even_numbers.length(), 6);
 
     // 3. test delete back
+    even_numbers.delete_back();
+    ASSERT_EQ(even_numbers.length(), 5);
 }
 
 TEST(SinglyListTest, ListConstruction) {
