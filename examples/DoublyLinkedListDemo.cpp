@@ -94,7 +94,7 @@ int main() {
     std::cout << "\n\n";
 
     // 2. Reverse iteration
-    for (auto pos = even_numbers.rbegin(); pos != even_numbers.rend(); --pos) {
+    for (auto pos = even_numbers.rbegin(); pos != even_numbers.rend(); ++pos) {
         std::cout << *pos << "-->";
     }
     std::cout << "\n\n";
