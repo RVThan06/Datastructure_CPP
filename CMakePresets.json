@@ -16,9 +16,18 @@
             }
         },
         {
-            "name": "dev",
-            "displayName": "Development (Debug)",
-            "description": "Debug build with strict warnings",
+            "name": "linux-base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "win-dev",
+            "displayName": "Windows Dev (Debug)",
+            "description": "Windows Debug build with strict warnings",
             "inherits": "windows-base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -28,10 +37,34 @@
             }
         },
         {
-            "name": "release",
-            "displayName": "Release",
-            "description": "Optimized release build",
+            "name": "linux-dev",
+            "displayName": "Linux Dev (Debug)",
+            "description": "Linux Debug build with strict warnings",
+            "inherits": "linux-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "DATASTRUCTS_BUILD_TESTS": "ON",
+                "DATASTRUCTS_BUILD_EXAMPLES": "ON",
+                "DATASTRUCTS_BUILD_SANDBOX": "ON"
+            }
+        },
+        {
+            "name": "win-release",
+            "displayName": "Windows Release",
+            "description": "Windows Optimized release build",
             "inherits": "windows-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "DATASTRUCTS_BUILD_TESTS": "OFF",
+                "DATASTRUCTS_BUILD_EXAMPLES": "ON",
+                "DATASTRUCTS_BUILD_SANDBOX": "ON"
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "description": "Linux Optimized release build",
+            "inherits": "linux-base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "DATASTRUCTS_BUILD_TESTS": "OFF",
@@ -42,12 +75,20 @@
     ],
     "buildPresets": [
         {
-            "name": "dev",
-            "configurePreset": "dev"
+            "name": "win-dev",
+            "configurePreset": "win-dev"
         },
         {
-            "name": "release",
-            "configurePreset": "release"
+            "name": "linux-dev",
+            "configurePreset": "linux-dev"
+        },
+        {
+            "name": "win-release",
+            "configurePreset": "win-release"
+        },
+        {
+            "name": "linux-release",
+            "configurePreset": "linux-release"
         }
     ]
 }

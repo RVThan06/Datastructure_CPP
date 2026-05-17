@@ -53,29 +53,17 @@
     // --- General CMake Integration ---
     "cmake.sourceDirectory": "${workspaceFolder}",
     "cmake.configureOnOpen": true,
-    // Links IntelliSense to CMake
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    // Forces VS Code to look at your CMakePresets.json file
-    "cmake.useCMakePresets": "always",
+    "cmake.useCMakePresets": "auto",
     // --- Clang format ---
-    // [CRITICAL] Enable formatting when you save a file
     "editor.formatOnSave": true,
-    // Ensure the C++ extension is the one doing the formatting
-    // (It is the one that knows how to read .clang-format)
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
-    // Optional: Also format headers
     "[cpp_header]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
-    // --- Clang Tidy ---
-    "C_Cpp.codeAnalysis.clangTidy.args": [
-        "--target=x86_64-w64-mingw32"
-    ],
-    // [CRITICAL] Turn on Clang-Tidy integration
+    // --- Clang Tidy (Platform Agnostic) ---
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
-    // Run the checks every time you save (Recommended)
-    // You can set this to "onType", but it might make typing feel laggy on large files.
     "C_Cpp.codeAnalysis.runAutomatically": "onSave"
 }
