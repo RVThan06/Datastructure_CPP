@@ -7,6 +7,11 @@ project(DataStructs
     LANGUAGES CXX
 )
 
+# --- C++ Standard ---
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # --- Top Level Check ---
 # Check if this project is being built directly or included by another project[cite: 2].
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -21,11 +26,6 @@ endif()
 option(DATASTRUCTS_BUILD_TESTS "Build unit tests" OFF)
 option(DATASTRUCTS_BUILD_EXAMPLES "Build example applications" ${DATASTRUCTS_IS_TOP_LEVEL})
 option(DATASTRUCTS_BUILD_SANDBOX "Build local sandbox executable" ${DATASTRUCTS_IS_TOP_LEVEL})
-
-# --- C++ Standard ---
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 # --- Library Definition ---
 add_library(datastructs INTERFACE)

@@ -5,9 +5,10 @@
             "name": "Debug Sandbox",
             "type": "cppdbg",
             "request": "launch",
+            // - Gets build target path from CMake Tools extension and launches it
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": false, // debugger runs until breakpoint if false
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,

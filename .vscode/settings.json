@@ -1,5 +1,7 @@
 {
+    // --- To ensure new line is inserted at end of each file ---
     "files.insertFinalNewline": true,
+    // --- To allow c++ standard library headers to be recognized as C++ files ---
     "files.associations": {
         "string_view": "cpp",
         "iostream": "cpp",
@@ -51,11 +53,19 @@
         "set": "cpp"
     },
     // --- General CMake Integration ---
+    //
+    // --- where root CmakeLists.txt is ---
     "cmake.sourceDirectory": "${workspaceFolder}",
+    // --- Auto runs cmake --preset when folder is opened ---
     "cmake.configureOnOpen": true,
+    // --- Bridge Microsoft c++ intellisense engine with CMake Tools extension ---
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    // --- Use CMake Presets if available in presets.json---
     "cmake.useCMakePresets": "auto",
+    //
     // --- Clang format ---
+    //
+    // --- Format every file on save ---
     "editor.formatOnSave": true,
     "[cpp]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
@@ -63,7 +73,7 @@
     "[cpp_header]": {
         "editor.defaultFormatter": "ms-vscode.cpptools"
     },
-    // --- Clang Tidy (Platform Agnostic) ---
+    // --- Clang Tidy (Platform Agnostic) / static analysis ---
     "C_Cpp.codeAnalysis.clangTidy.enabled": true,
     "C_Cpp.codeAnalysis.runAutomatically": "onSave"
 }
